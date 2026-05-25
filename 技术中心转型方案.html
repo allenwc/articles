@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>技术中心转型方案</title>
+<style>
+  :root {
+    --primary: #2563eb;
+    --primary-light: #dbeafe;
+    --accent: #7c3aed;
+    --accent-light: #ede9fe;
+    --success: #059669;
+    --success-light: #d1fae5;
+    --warn: #d97706;
+    --warn-light: #fef3c7;
+    --bg: #fafbfc;
+    --card: #ffffff;
+    --text: #1e293b;
+    --text2: #64748b;
+    --border: #e2e8f0;
+    --radius: 16px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, "Noto Sans SC", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    transition: none;
+  }
+
+  /* ========== SCROLL MODE ========== */
+  .scroll-mode .section {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 80px 40px;
+    min-height: auto;
+    border-bottom: 1px solid var(--border);
+    animation: fadeUp 0.6s ease both;
+  }
+  .scroll-mode .section:last-child { border-bottom: none; }
+
+  /* ========== PRESENT MODE ========== */
+  .present-mode { overflow: hidden; }
+  .present-mode .section {
+    position: fixed;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 80px;
+    max-width: 100%;
+    border-bottom: none;
+    background: var(--bg);
+    overflow-y: auto;
+  }
+  .present-mode .section.active { display: flex; }
+  .present-mode .section .inner { max-width: 1000px; margin: 0 auto; width: 100%; }
+
+  /* ========== MODE TOGGLE ========== */
+  .mode-toggle {
+    position: fixed; top: 20px; right: 20px; z-index: 999;
+    background: var(--primary); color: #fff;
+    border: none; border-radius: 8px;
+    padding: 8px 16px; font-size: 13px;
+    cursor: pointer; opacity: 0.85;
+    transition: opacity 0.2s;
+  }
+  .mode-toggle:hover { opacity: 1; }
+
+  /* ========== PAGE INDICATOR ========== */
+  .page-indicator {
+    position: fixed; bottom: 20px; right: 20px; z-index: 999;
+    font-size: 13px; color: var(--text2);
+    background: rgba(255,255,255,0.9); padding: 4px 12px;
+    border-radius: 6px; display: none;
+    backdrop-filter: blur(4px);
+  }
+  .present-mode .page-indicator { display: block; }
+
+  /* ========== TYPOGRAPHY ========== */
+  h1 {
+    font-size: 2.4rem; font-weight: 700; letter-spacing: -0.02em;
+    margin-bottom: 0.4em; color: var(--text);
+  }
+  h2 {
+    font-size: 1.5rem; font-weight: 600; margin-bottom: 0.6em;
+    color: var(--primary);
+  }
+  .subtitle {
+    font-size: 1.15rem; color: var(--text2); margin-bottom: 2em;
+  }
+  .tag {
+    display: inline-block; font-size: 0.8rem; padding: 3px 10px;
+    border-radius: 20px; font-weight: 500; margin-right: 8px;
+  }
+  .tag-blue { background: var(--primary-light); color: var(--primary); }
+  .tag-purple { background: var(--accent-light); color: var(--accent); }
+  .tag-green { background: var(--success-light); color: var(--success); }
+
+  /* ========== CARDS ========== */
+  .cards { display: grid; gap: 20px; margin-top: 1.5em; }
+  .cards-3 { grid-template-columns: repeat(3, 1fr); }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    transition: box-shadow 0.2s;
+  }
+  .card:hover { box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
+  .card h3 { font-size: 1.1rem; margin-bottom: 0.5em; }
+  .card p { font-size: 0.95rem; color: var(--text2); }
+  .card-blue { border-left: 4px solid var(--primary); }
+  .card-purple { border-left: 4px solid var(--accent); }
+  .card-green { border-left: 4px solid var(--success); }
+  .card-warn { border-left: 4px solid var(--warn); }
+
+  /* ========== TABLE ========== */
+  table {
+    width: 100%; border-collapse: collapse; margin-top: 1em;
+    font-size: 0.95rem;
+  }
+  th {
+    text-align: left; padding: 12px 16px;
+    background: var(--primary-light); color: var(--primary);
+    font-weight: 600; font-size: 0.85rem; text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  td { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+  tr:hover td { background: #f8fafc; }
+
+  /* ========== COVER ========== */
+  .cover {
+    text-align: center;
+    padding-top: 120px !important;
+    padding-bottom: 120px !important;
+  }
+  .cover h1 { font-size: 3.2rem; margin-bottom: 0.2em; }
+  .cover .subtitle { font-size: 1.3rem; margin-bottom: 2.5em; }
+  .cover-meta {
+    display: flex; justify-content: center; gap: 32px;
+    font-size: 0.95rem; color: var(--text2);
+  }
+  .cover-meta span { display: flex; align-items: center; gap: 6px; }
+
+  .present-mode .cover { justify-content: center; align-items: center; padding: 60px 80px !important; }
+
+  /* ========== ANIMATIONS ========== */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ========== RESPONSIVE ========== */
+  @media (max-width: 768px) {
+    .cards-3 { grid-template-columns: 1fr; }
+    .cover h1 { font-size: 2rem; }
+    h1 { font-size: 1.8rem; }
+    .section { padding: 48px 20px; }
+    .present-mode .section { padding: 40px 24px; }
+  }
+
+  /* ========== HELP HINT ========== */
+  .help-hint {
+    position: fixed; bottom: 20px; left: 20px; z-index: 999;
+    font-size: 12px; color: var(--text2); opacity: 0.6;
+  }
+</style>
+</head>
+<body class="scroll-mode">
+
+<button class="mode-toggle" onclick="toggleMode()">⏎ 演示模式</button>
+<div class="page-indicator"></div>
+<div class="help-hint">按 P 切换演示模式 ｜ 演示中 ← → 翻页 ｜ ESC 退出</div>
+
+<!-- ====== PAGE 1: COVER ====== -->
+<div class="section cover">
+  <div class="inner">
+    <div style="margin-bottom: 24px;">
+      <span class="tag tag-blue">2026</span>
+      <span class="tag tag-purple">战略转型</span>
+    </div>
+    <h1>技术中心转型方案</h1>
+    <p class="subtitle">从传统职能划分向「全栈 + Agent」能力转型</p>
+    <div class="cover-meta">
+      <span>👥 团队规模：69人</span>
+      <span>📍 状态：方案已确定，落地执行中</span>
+    </div>
+  </div>
+</div>
+
+<!-- ====== PAGE 2: 背景 ====== -->
+<div class="section">
+  <div class="inner">
+    <h2>背景</h2>
+    <h1>三个重要性变化</h1>
+    <p class="subtitle">理解这三点，是理解后续组织与工作流设计的前提</p>
+
+    <div class="cards cards-3">
+      <div class="card card-blue">
+        <h3>🔧 变化 1</h3>
+        <p><strong>AI 重写了软件工程的生产方式</strong></p>
+        <p style="margin-top:8px;">交付从「多角色串联、长周期」转向「单人 + Agent」端到端闭环——不是效率微调，而是<strong>生产范式变化</strong></p>
+      </div>
+      <div class="card card-purple">
+        <h3>📢 变化 2</h3>
+        <p><strong>业务部门对技术的诉求变了</strong></p>
+        <p style="margin-top:8px;">业务侧 AI 落地需求多、但普遍缺技术支撑；技术中心有 AI 能力，却缺少<strong>主动赋能的组织机制</strong></p>
+      </div>
+      <div class="card card-green">
+        <h3>📊 变化 3</h3>
+        <p><strong>价值证明方式变了</strong></p>
+        <p style="margin-top:8px;">从「完成了多少需求」→ 业务侧可量化的<strong>效率提升与 ROI</strong>；从被动接单的成本中心 → 主动赋能的价值中心</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== PAGE 3: 新组织架构 ====== -->
+<div class="section">
+  <div class="inner">
+    <h2>组织架构</h2>
+    <h1>一体两翼</h1>
+    <p class="subtitle">原 8 个部门合并重组，打破前端/后端/QA 职能墙</p>
+
+    <!-- 一体两翼布局 -->
+    <div style="display:flex; gap:20px; align-items:stretch; margin-top:1.5em;">
+      <!-- 左翼 -->
+      <div class="card card-purple" style="flex:1; display:flex; flex-direction:column;">
+        <div style="font-size:0.75rem; font-weight:600; color:var(--accent); letter-spacing:1px; margin-bottom:8px;">🪽 左翼</div>
+        <h3>智能解决方案部</h3>
+        <p style="font-size:2rem; font-weight:700; color:var(--accent); margin: 8px 0;">18<span style="font-size:1rem;font-weight:400;">人</span></p>
+        <ul style="text-align:left; padding-left:1.2em; margin:0; font-size:0.9rem; line-height:1.8;">
+          <li>深入业务，定义高价值问题</li>
+          <li>AI/Agent 方案设计与落地</li>
+          <li>1v1 驻场陪跑，技能转移</li>
+        </ul>
+      </div>
+      <!-- 一体 -->
+      <div class="card card-blue" style="flex:1.5; display:flex; flex-direction:column; border-width:2px; border-left-width:6px; box-shadow:0 2px 16px rgba(37,99,235,0.1);">
+        <div style="font-size:0.75rem; font-weight:600; color:var(--primary); letter-spacing:1px; margin-bottom:8px;">🏛️ 主体</div>
+        <h3>工程技术部</h3>
+        <p style="font-size:2.4rem; font-weight:700; color:var(--primary); margin: 8px 0;">42<span style="font-size:1.1rem;font-weight:400;">人</span></p>
+        <ul style="text-align:left; padding-left:1.2em; margin:0; font-size:0.9rem; line-height:1.8;">
+          <li>传统系统运维与需求迭代</li>
+          <li>Agent 驱动单人闭环交付</li>
+          <li>承接 Agent 解决方案落地</li>
+        </ul>
+      </div>
+      <!-- 右翼 -->
+      <div class="card card-green" style="flex:1; display:flex; flex-direction:column;">
+        <div style="font-size:0.75rem; font-weight:600; color:var(--success); letter-spacing:1px; margin-bottom:8px;">🪽 右翼</div>
+        <h3>基础技术部</h3>
+        <p style="font-size:2rem; font-weight:700; color:var(--success); margin: 8px 0;">8<span style="font-size:1rem;font-weight:400;">人</span></p>
+        <ul style="text-align:left; padding-left:1.2em; margin:0; font-size:0.9rem; line-height:1.8;">
+          <li>资源降本</li>
+          <li>Agent 基础设施（SkillHub / Token 管理）</li>
+          <li>Agent 规模化部署运维</li>
+        </ul>
+      </div>
+    </div>
+    <!-- 一体两翼说明 -->
+    <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:16px; margin-top:20px;">
+      <div style="background:var(--accent-light); border-radius:10px; padding:16px 20px; text-align:center;">
+        <div style="font-size:1.1rem; font-weight:700; color:var(--accent); margin-bottom:6px;">🪽 左翼</div>
+        <div style="font-size:0.85rem; color:var(--text2); line-height:1.6;">智能解决方案部向业务侧延展<br>定义问题、落地方案</div>
+      </div>
+      <div style="background:var(--primary-light); border-radius:10px; padding:16px 20px; text-align:center;">
+        <div style="font-size:1.1rem; font-weight:700; color:var(--primary); margin-bottom:6px;">🏛️ 一体</div>
+        <div style="font-size:0.85rem; color:var(--text2); line-height:1.6;">工程技术部是业务交付的主体<br>也是 Agent 化转型的主战场</div>
+      </div>
+      <div style="background:var(--success-light); border-radius:10px; padding:16px 20px; text-align:center;">
+        <div style="font-size:1.1rem; font-weight:700; color:var(--success); margin-bottom:6px;">🪽 右翼</div>
+        <div style="font-size:0.85rem; color:var(--text2); line-height:1.6;">基础技术部向基础设施延展<br>为 Agent 时代提供底座支撑</div>
+      </div>
+    </div>
+    <!-- 底层逻辑 -->
+    <div style="margin-top:24px; padding:20px 24px; background:linear-gradient(135deg,#f8fafc,#f0f4ff); border-radius:12px; border:1px solid var(--border);">
+      <div style="font-size:0.85rem; font-weight:700; color:var(--text); margin-bottom:14px; letter-spacing:0.5px;">🧭 底层逻辑</div>
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <div style="display:flex; gap:12px; align-items:flex-start;">
+          <div style="min-width:28px; height:28px; background:var(--accent); color:#fff; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700;">1</div>
+          <div style="font-size:0.85rem; color:var(--text2); line-height:1.7;">Agent 与模型能力极强，迭代速度也很快，但如何让这把尖刀真正渗透到严选业务、实打实产生<strong style="color:var(--text);">业务增益</strong>而不只是提效？这需要同时具备<strong style="color:var(--accent);">Agent 内化能力 + 业务理解洞察</strong>——技术中心拥有前者，如何让同学具备后者？最直接的方式：<strong style="color:var(--accent);">到一线去，和业务在一起做业务</strong>。智能解决方案部由此而生。</div>
+        </div>
+        <div style="display:flex; gap:12px; align-items:flex-start;">
+          <div style="min-width:28px; height:28px; background:var(--success); color:#fff; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700;">2</div>
+          <div style="font-size:0.85rem; color:var(--text2); line-height:1.7;">Agent 时代，基础设施的内涵发生了<strong style="color:var(--text);">质的变化</strong>——Token 管理、SkillHub、Agent 规模化运维成为新基建命题。基础技术部原本就存在，但核心命题已从传统运维转向：<strong style="color:var(--success);">资源降本 + Agent 时代新基建</strong>。</div>
+        </div>
+        <div style="display:flex; gap:12px; align-items:flex-start;">
+          <div style="min-width:28px; height:28px; background:var(--primary); color:#fff; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700;">3</div>
+          <div style="font-size:0.85rem; color:var(--text2); line-height:1.7;">工程技术部作为<strong style="color:var(--primary);">业务需求交付主体 + Agent 转型主战场</strong>，需要左翼深入业务洞察、右翼筑牢 Agent 基建——一体两翼，协同才能成事。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== PAGE 4: 转型目标 ====== -->
+<div class="section">
+  <div class="inner">
+    <h2>转型目标</h2>
+    <h1>人员能力 + Agent 体系</h1>
+
+    <div class="cards" style="grid-template-columns: 1fr 1fr; margin-bottom: 16px;">
+      <div class="card card-blue">
+        <h3>🧑‍💻 全栈能力</h3>
+        <p><strong>现状：</strong>按职能划分（前端/后端/移动端/QA/PM/产品）</p>
+        <p style="margin-top:8px;"><strong>目标：</strong>全员具备全栈能力</p>
+      </div>
+      <div class="card card-purple">
+        <h3>🤖 Agent 能力</h3>
+        <p><strong>现状：</strong>无</p>
+        <p style="margin-top:8px;"><strong>目标：</strong>全员具备 Agent 方案设计与落地能力</p>
+      </div>
+    </div>
+    <div style="text-align:center; margin-bottom: 12px;">
+      <span style="font-size:1.5rem; color:var(--text3);">▲ 支撑 ▲</span>
+    </div>
+    <div class="card card-green" style="text-align:center;">
+      <h3>🧩 Agent 体系</h3>
+      <p>研发协同全流程场景：需求/产品 · 研发编码 · 测试 · 运维/DevOps · DataAgent · 项目管理</p>
+    </div>
+  </div>
+</div>
+
+<!-- ====== PAGE 5: 工程技术部详情 ====== -->
+<div class="section">
+  <div class="inner">
+    <h2>工程技术部</h2>
+    <h1>42 人 · 虚拟小组编制</h1>
+    <p class="subtitle">Agent 驱动单人闭环交付，承接部分需求从传统方案向 Agent 方案迁移</p>
+
+    <div style="display:flex; gap:20px; margin-bottom:20px; font-size:0.88rem;">
+      <div style="flex:1; padding:12px 18px; background:var(--primary-light); border-left:4px solid var(--primary); border-radius:6px;">
+        <strong style="color:var(--primary);">🎯 核心定位</strong>　业务系统的<strong>稳定交付者</strong>与<strong>技术底座守护者</strong>，同时作为技术能力向 Agent 时代迁移的主力军
+      </div>
+      <div style="flex:1; padding:12px 18px; background:var(--primary-light); border-left:4px solid var(--primary); border-radius:6px;">
+        <strong style="color:var(--primary);">🚀 核心目标</strong>　交付方式从「多角色串行」转型为「Agent 驱动单人闭环」，人效翻倍，释放产能承接更高价值方向
+      </div>
+    </div>
+
+    <div style="margin-bottom:12px; font-size:0.8rem; color:var(--text3); font-weight:600; letter-spacing:1px;">虚拟小组编制</div>
+
+    <!-- 严选品牌业务 + 大客户 + 衍生品 -->
+    <div style="display:flex; gap:12px; margin-bottom:12px;">
+      <div class="card" style="flex:2; padding:14px 20px;">
+        <div style="font-size:0.95rem; font-weight:700; color:var(--primary); margin-bottom:10px;">📦 严选品牌业务</div>
+        <div style="display:grid; grid-template-columns: repeat(5, 1fr); gap:8px;">
+          <div style="text-align:center; padding:8px 6px; background:var(--primary-light); border-radius:8px;">
+            <div style="font-size:0.82rem; font-weight:600;">商品组</div>
+            <div style="font-size:0.72rem; color:var(--text2); margin-top:3px;">宠物+非宠物商品运营</div>
+          </div>
+          <div style="text-align:center; padding:8px 6px; background:var(--primary-light); border-radius:8px;">
+            <div style="font-size:0.82rem; font-weight:600;">营销组</div>
+            <div style="font-size:0.72rem; color:var(--text2); margin-top:3px;">内容/用户/品牌营销</div>
+          </div>
+          <div style="text-align:center; padding:8px 6px; background:var(--primary-light); border-radius:8px;">
+            <div style="font-size:0.82rem; font-weight:600;">销售组</div>
+            <div style="font-size:0.72rem; color:var(--text2); margin-top:3px;">私域/渠道/O2O/分销</div>
+          </div>
+          <div style="text-align:center; padding:8px 6px; background:var(--primary-light); border-radius:8px;">
+            <div style="font-size:0.82rem; font-weight:600;">效能组</div>
+            <div style="font-size:0.72rem; color:var(--text2); margin-top:3px;">研发效能与工具链</div>
+          </div>
+          <div style="text-align:center; padding:8px 6px; background:var(--primary-light); border-radius:8px;">
+            <div style="font-size:0.82rem; font-weight:600;">数开组</div>
+            <div style="font-size:0.72rem; color:var(--text2); margin-top:3px;">数据开发与数仓</div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:12px; flex:1;">
+        <div class="card" style="flex:1; padding:14px 20px; display:flex; flex-direction:column; justify-content:center;">
+          <div style="font-size:0.95rem; font-weight:700; color:var(--primary);">🏢 大客户业务</div>
+          <div style="font-size:0.82rem; color:var(--text2); margin-top:4px;">AI 标书 · 智能选品 · 大客户定制方案</div>
+        </div>
+        <div class="card" style="flex:1; padding:14px 20px; display:flex; flex-direction:column; justify-content:center;">
+          <div style="font-size:0.95rem; font-weight:700; color:var(--primary);">🎁 衍生品业务</div>
+          <div style="font-size:0.82rem; color:var(--text2); margin-top:4px;">衍生品系统 · IP 授权与供应链</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 中后台 -->
+    <div class="card" style="margin-top:12px; padding:14px 20px;">
+      <div style="font-size:0.95rem; font-weight:700; color:var(--primary);">⚙️ 中后台</div>
+      <div style="font-size:0.82rem; color:var(--text2); margin-top:4px;">客服 + 供应链（仓配/供管/计划/价格管控）</div>
+    </div>
+
+    <div class="card" style="margin-top: 20px; background: #f0f5ff; border-left: 4px solid var(--primary);">
+      <h3>📋 技术BP — 责权对等</h3>
+      <p style="font-size:0.85rem; color:var(--text2); margin-bottom:14px;">技术 BP（Business Partner）是新提出的角色定位：每个虚拟小组的负责人不只是管理需求，而是对业务结果负责的技术合伙人。有责无权是背锅位，必须配够权。</p>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <!-- 行1 -->
+        <div style="display:grid; grid-template-columns: 180px 1fr; gap:0; background:white; border-radius:8px; overflow:hidden;">
+          <div style="padding:12px 14px; background:var(--primary); color:white; display:flex; flex-direction:column; justify-content:center;">
+            <div style="font-size:0.72rem; opacity:0.7;">责</div>
+            <div style="font-size:0.82rem; font-weight:700;">① SDD 深度落地的驱动者</div>
+            <div style="font-size:0.68rem; opacity:0.85; margin-top:3px;">推动单人闭环交付模式在小组内真正跑起来</div>
+          </div>
+          <div style="padding:10px 14px; display:flex; flex-direction:column; justify-content:center;">
+            <div style="font-size:0.72rem; font-weight:700; color:var(--primary);">权 · 驱动侧</div>
+            <ul style="font-size:0.75rem; color:var(--text2); padding-left:14px; margin:4px 0 0; line-height:1.65;">
+              <li><strong style="color:var(--text1);">研发资源分配权</strong>：决定组内研发人力投入方向及比例</li>
+              <li><strong style="color:var(--text1);">SDD 落地策略决策权</strong>：哪些需求先切 Agent、转型路径，根据 BASE 画像定策略</li>
+              <li><strong style="color:var(--text1);">优先级否决权</strong>：业务方"都要紧急"时，按实际产能排优先级</li>
+              <li><strong style="color:var(--text1);">绩效评价建议权</strong>：组内成员 BASE 评估与绩效评定，BP 有权重建议权</li>
+            </ul>
+          </div>
+        </div>
+        <!-- 行2 -->
+        <div style="display:grid; grid-template-columns: 180px 1fr; gap:0; background:white; border-radius:8px; overflow:hidden;">
+          <div style="padding:12px 14px; background:var(--accent); color:white; display:flex; flex-direction:column; justify-content:center;">
+            <div style="font-size:0.72rem; opacity:0.7;">责</div>
+            <div style="font-size:0.82rem; font-weight:700;">② 效能体系构建的深度参与者</div>
+            <div style="font-size:0.68rem; opacity:0.85; margin-top:3px;">参与 AI 效能工具链构建与反馈，沉淀可复用 Skill</div>
+          </div>
+          <div style="padding:10px 14px; display:flex; flex-direction:column; justify-content:center;">
+            <div style="font-size:0.72rem; font-weight:700; color:var(--accent);">权 · 协作侧</div>
+            <ul style="font-size:0.75rem; color:var(--text2); padding-left:14px; margin:4px 0 0; line-height:1.65;">
+              <li><strong style="color:var(--text1);">Skill 沉淀规则定义权</strong>：什么值得沉淀为 Skill、什么只是一次性脚本</li>
+              <li><strong style="color:var(--text1);">效能体系方案选型投票权</strong>：对团队采用的效能工具链和方案有投票决策权</li>
+              <li><strong style="color:var(--text1);">Token 使用管理权</strong>：组内 Token 额度分配与使用审批，BP 决定优先保障哪些 Agent 场景</li>
+            </ul>
+          </div>
+        </div>
+        <!-- 行3 -->
+        <div style="display:grid; grid-template-columns: 180px 1fr; gap:0; background:white; border-radius:8px; overflow:hidden;">
+          <div style="padding:12px 14px; background:#1e293b; color:white; display:flex; flex-direction:column; justify-content:center;">
+            <div style="font-size:0.72rem; opacity:0.7;">责</div>
+            <div style="font-size:0.82rem; font-weight:700;">③ Agent 解决方案的承接者</div>
+            <div style="font-size:0.68rem; opacity:0.85; margin-top:3px;">承接 Agent 方案落地并持续运维</div>
+          </div>
+          <div style="padding:10px 14px; display:flex; flex-direction:column; justify-content:center;">
+            <div style="font-size:0.72rem; font-weight:700; color:var(--success);">权 · 承接侧</div>
+            <ul style="font-size:0.75rem; color:var(--text2); padding-left:14px; margin:4px 0 0; line-height:1.65;">
+              <li><strong style="color:var(--text1);">Agent 方案承接否决权</strong>：方案不适合当前组，有权拒绝，不能硬塞</li>
+              <li><strong style="color:var(--text1);">交付方式决定权</strong>：传统 or Agent 方式，BP 拍板，不需上级审批</li>
+              <li><strong style="color:var(--text1);">需求过滤权</strong>：B/C 级需求有权挡回，走智能解决方案部或业务自助</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== PAGE 6: 智能解决方案部 ====== -->
+<div class="section">
+  <div class="inner">
+    <h2>左翼 · 智能解决方案部</h2>
+    <h1>18 人</h1>
+    <p class="subtitle">到一线去，和业务在一起做业务——让 Agent 这把尖刀真正渗透严选业务，产生业务增益</p>
+
+    <div style="display:flex; gap:14px; margin-bottom:16px;">
+      <div style="flex:1; padding:14px 18px; background:var(--accent-light); border-left:4px solid var(--accent); border-radius:6px;">
+        <strong style="color:var(--accent);">🎯 核心命题</strong>　技术中心有 Agent 内化能力，但缺业务理解洞察。如何让两者结合？<strong style="color:var(--text);">到一线去</strong>——这是最直接、最有效的方式。
+      </div>
+    </div>
+
+    <div class="cards cards-3">
+      <div class="card card-purple" style="text-align:center;">
+        <div style="font-size:2rem;margin-bottom:8px;">🎯</div>
+        <h3>主动赋能</h3>
+        <p style="font-size:0.85rem;">跑到业务一线，从被动接单转向主动定义问题</p>
+      </div>
+      <div class="card card-purple" style="text-align:center;">
+        <div style="font-size:2rem;margin-bottom:8px;">🤖</div>
+        <h3>Agent 落地</h3>
+        <p style="font-size:0.85rem;">设计并落地 AI/Agent 解决方案，交付可量化的 ROI</p>
+      </div>
+      <div class="card card-purple" style="text-align:center;">
+        <div style="font-size:2rem;margin-bottom:8px;">🔄</div>
+        <h3>技能转移</h3>
+        <p style="font-size:0.85rem;">1v1 驻场陪跑，沉淀 Skill 资产，最终让业务方自主运维</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px; background:#f8fafc;">
+      <h3>🧭 闭环飞轮</h3>
+      <div style="display:flex;gap:12px;align-items:center;margin-top:8px;font-size:0.9rem;flex-wrap:wrap;">
+        <span style="background:var(--accent-light);padding:6px 14px;border-radius:6px;color:var(--accent);font-weight:500;">深入业务一线</span>
+        <span style="color:var(--text2);">→</span>
+        <span style="background:var(--accent-light);padding:6px 14px;border-radius:6px;color:var(--accent);font-weight:500;">定义高价值问题</span>
+        <span style="color:var(--text2);">→</span>
+        <span style="background:var(--accent-light);padding:6px 14px;border-radius:6px;color:var(--accent);font-weight:500;">Agent 方案落地</span>
+        <span style="color:var(--text2);">→</span>
+        <span style="background:var(--accent-light);padding:6px 14px;border-radius:6px;color:var(--accent);font-weight:500;">Skill 沉淀</span>
+        <span style="color:var(--text2);">→</span>
+        <span style="background:var(--accent-light);padding:6px 14px;border-radius:6px;color:var(--accent);font-weight:500;">技能转移 → 退出轮换</span>
+      </div>
+      <p style="font-size:0.82rem;color:var(--text2);margin-top:10px;">每一次落地案例 → 沉淀为 Skill 资产 → 存入知识库 → 下一个业务部门直接复用。最终目标：<strong style="color:var(--text);">业务方自主运维，团队退出轮换</strong>。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ====== PAGE 7: 基础技术部 ====== -->
+<div class="section">
+  <div class="inner">
+    <h2>右翼 · 基础技术部</h2>
+    <h1>8 人</h1>
+    <p class="subtitle">核心命题：资源降本 + Agent 时代新基建</p>
+
+    <div style="display:flex; gap:14px; margin-bottom:16px;">
+      <div style="flex:1; padding:14px 18px; background:var(--success-light); border-left:4px solid var(--success); border-radius:6px;">
+        <strong style="color:var(--success);">🎯 命题转变</strong>　基础技术部原本就存在，但 Agent 时代让基础设施的内涵发生了<strong style="color:var(--text);">质的变化</strong>——从传统运维转向资源降本 + Agent 新基建。
+      </div>
+    </div>
+
+    <div class="cards" style="grid-template-columns: 1fr 1fr;">
+      <div class="card card-green">
+        <h3>💰 资源降本</h3>
+        <ul style="font-size:0.85rem; padding-left:1.2em; margin:8px 0 0; line-height:1.8; color:var(--text2);">
+          <li>服务器资源优化与缩容</li>
+          <li>成本监控与预算管控</li>
+          <li>年度降本目标落地</li>
+        </ul>
+      </div>
+      <div class="card card-green">
+        <h3>🏗️ Agent 时代新基建</h3>
+        <ul style="font-size:0.85rem; padding-left:1.2em; margin:8px 0 0; line-height:1.8; color:var(--text2);">
+          <li>SkillHub：Skill 资产的存储、版本与分发</li>
+          <li>Token 管理：额度分配、使用审计与成本核算</li>
+          <li>Agent 规模化部署运维</li>
+          <li>中间件与基础设施保障</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px; background:#f8fafc;">
+      <p style="font-size:0.9rem;">右翼的价值：<strong style="color:var(--success);">让 Agent 跑得稳、跑得省、跑得起来</strong>——没有新基建，Agent 是玩具；有了新基建，Agent 才是生产力。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ====== PAGE 8: 需求管理流 ====== -->
+<div class="section">
+  <div class="inner">
+    <h2>工作流重塑</h2>
+    <h1>需求管理流</h1>
+    <p class="subtitle">统一入口，智能分级——一体两翼各归其位</p>
+
+    <div class="cards cards-3">
+      <div class="card card-blue">
+        <div style="font-size:0.72rem; font-weight:600; color:var(--primary); letter-spacing:1px; margin-bottom:8px;">🏛️ 一体</div>
+        <h3>🔴 A 级需求</h3>
+        <p style="font-size:0.9rem;font-weight:600;color:var(--primary);">核心系统 / 高复杂度 / 多团队协同</p>
+        <p style="margin-top:10px;font-size:0.85rem;">→ 工程技术部</p>
+        <p style="font-size:0.85rem;">Spec 定义 → Agent 执行 → 人工验收</p>
+        <p style="font-size:0.78rem;color:var(--text2);margin-top:6px;">SDD 单人闭环交付，关键节点 Human-in-the-Loop</p>
+      </div>
+      <div class="card card-purple">
+        <div style="font-size:0.72rem; font-weight:600; color:var(--accent); letter-spacing:1px; margin-bottom:8px;">🪽 左翼</div>
+        <h3>🟡 B 级需求</h3>
+        <p style="font-size:0.9rem;font-weight:600;color:var(--accent);">AI/Agent 可解决 / 流程型 / 提效空间明确</p>
+        <p style="margin-top:10px;font-size:0.85rem;">→ 智能解决方案部</p>
+        <p style="font-size:0.85rem;">深入一线 → Agent 方案 → Skill 沉淀 → 技能转移</p>
+        <p style="font-size:0.78rem;color:var(--text2);margin-top:6px;">到业务中去，交付可量化的 ROI，最终退出轮换</p>
+      </div>
+      <div class="card card-green">
+        <div style="font-size:0.72rem; font-weight:600; letter-spacing:1px; margin-bottom:8px;">
+          <span style="color:var(--accent);">🪽 左翼</span>
+          <span style="color:var(--text2); margin:0 4px;">+</span>
+          <span style="color:var(--success);">🪽 右翼</span>
+          <span style="color:var(--text2); margin:0 4px;">协同</span>
+        </div>
+        <h3>🟢 C 级需求</h3>
+        <p style="font-size:0.9rem;font-weight:600;color:var(--success);">标准化 / 自助工具可完成 / 能力可转移</p>
+        <p style="margin-top:10px;font-size:0.85rem;">→ 业务自主</p>
+        <p style="font-size:0.85rem;">SkillHub 模板 → 工具赋权 → 自建应用</p>
+        <p style="font-size:0.78rem;color:var(--text2);margin-top:6px;">左翼技能转移 + 右翼 SkillHub/Token 等基建，两翼协同支撑业务自助</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 24px; background: #f8fafc;">
+      <p style="font-size:0.9rem;"><strong>核心目标：</strong>B + C 级需求年度占比达 <strong>50%+</strong>，释放工程技术部产能到更高价值方向——一体专注 A 级，左翼承接 B 级，两翼协同支撑 C 级，各归其位</p>
+    </div>
+  </div>
+</div>
+
+<!-- ====== PAGE 9: 三条工作流 ====== -->
+<div class="section">
+  <div class="inner">
+    <h2>工作流重塑</h2>
+    <h1>三条核心工作流</h1>
+    <p class="subtitle">一体两翼，三条工作流各归其位、协同运转</p>
+
+    <div class="cards" style="grid-template-columns: 1fr;">
+      <div class="card card-blue">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <span style="font-size:0.72rem;font-weight:600;color:var(--primary);letter-spacing:1px;">🏛️ 一体</span>
+        </div>
+        <h3>🔧 工程交付工作流</h3>
+        <div style="display:flex;gap:12px;align-items:center;margin-top:8px;font-size:0.9rem;flex-wrap:wrap;">
+          <span style="background:var(--primary-light);padding:4px 12px;border-radius:6px;color:var(--primary);font-weight:500;">技术收敛单一工种</span>
+          <span style="color:var(--text2);">→</span>
+          <span style="background:var(--primary-light);padding:4px 12px;border-radius:6px;color:var(--primary);font-weight:500;">多角色协同成本 → 0</span>
+          <span style="color:var(--text2);">→</span>
+          <span style="background:var(--primary-light);padding:4px 12px;border-radius:6px;color:var(--primary);font-weight:500;">人机协同监督 HITL</span>
+        </div>
+        <p style="margin-top:10px;font-size:0.85rem;color:var(--text2);">未来没有前端/后端/QA 分工，只有「研发工程师」；AI 全部自闭环，关键决策节点引入 Human-in-the-Loop</p>
+      </div>
+      <div class="card card-purple">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <span style="font-size:0.72rem;font-weight:600;color:var(--accent);letter-spacing:1px;">🪽 左翼</span>
+        </div>
+        <h3>🤖 AI 智能解决方案工作流</h3>
+        <div style="display:flex;gap:12px;align-items:center;margin-top:8px;font-size:0.9rem;flex-wrap:wrap;">
+          <span style="background:var(--accent-light);padding:4px 12px;border-radius:6px;color:var(--accent);font-weight:500;">深入业务一线</span>
+          <span style="color:var(--text2);">→</span>
+          <span style="background:var(--accent-light);padding:4px 12px;border-radius:6px;color:var(--accent);font-weight:500;">定义高价值问题</span>
+          <span style="color:var(--text2);">→</span>
+          <span style="background:var(--accent-light);padding:4px 12px;border-radius:6px;color:var(--accent);font-weight:500;">Agent 方案落地</span>
+          <span style="color:var(--text2);">→</span>
+          <span style="background:var(--accent-light);padding:4px 12px;border-radius:6px;color:var(--accent);font-weight:500;">Skill 沉淀</span>
+          <span style="color:var(--text2);">→</span>
+          <span style="background:var(--accent-light);padding:4px 12px;border-radius:6px;color:var(--accent);font-weight:500;">技能转移 → 退出轮换</span>
+        </div>
+        <p style="margin-top:10px;font-size:0.85rem;color:var(--text2);">核心飞轮：每一次落地案例 → 沉淀为 Skill 资产 → 存入 SkillHub → 下一个业务部门直接复用。最终目标：业务方自主运维，团队退出轮换</p>
+      </div>
+      <div class="card card-green">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <span style="font-size:0.72rem;font-weight:600;color:var(--accent);letter-spacing:1px;">🪽 左翼</span>
+          <span style="color:var(--text2);margin:0 2px;">+</span>
+          <span style="font-size:0.72rem;font-weight:600;color:var(--success);letter-spacing:1px;">🪽 右翼</span>
+          <span style="color:var(--text2);margin:0 2px;">协同</span>
+        </div>
+        <h3>🛠️ 业务自助解决工作流</h3>
+        <div style="display:flex;gap:12px;align-items:center;margin-top:8px;font-size:0.9rem;flex-wrap:wrap;">
+          <span style="background:var(--accent-light);padding:4px 12px;border-radius:6px;color:var(--accent);font-weight:500;">左翼技能转移</span>
+          <span style="color:var(--text2);">+</span>
+          <span style="background:var(--success-light);padding:4px 12px;border-radius:6px;color:var(--success);font-weight:500;">右翼 SkillHub/Token</span>
+          <span style="color:var(--text2);">→</span>
+          <span style="background:var(--success-light);padding:4px 12px;border-radius:6px;color:var(--success);font-weight:500;">业务自助解决</span>
+        </div>
+        <p style="margin-top:10px;font-size:0.85rem;color:var(--text2);">左翼将 Agent 技能转移给业务方，右翼提供 SkillHub 模板中心 + Token 管理等基建，两翼协同让 C 级需求业务方自助解决</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== PAGE 10: 总结 ====== -->
+<div class="section">
+  <div class="inner" style="text-align:center;">
+    <h2>总结</h2>
+    <h1>一体两翼，协同破局</h1>
+    <p class="subtitle">技术中心转型，核心就三件事</p>
+
+    <div class="cards cards-3" style="margin-top:2em;">
+      <div class="card card-blue" style="text-align:center;">
+        <div style="font-size:2.5rem;margin-bottom:8px;">🏛️</div>
+        <h3>组织归位</h3>
+        <p style="font-size:0.85rem;color:var(--text2);text-decoration:line-through;">一体全扛所有需求</p>
+        <p style="font-size:1.1rem;font-weight:700;color:var(--primary);margin-top:4px;">一体专注 A 级，两翼协同承接 B/C 级</p>
+        <p style="font-size:0.85rem;color:var(--text2);margin-top:4px;">左翼到一线找需求，右翼建新基建，一体释放产能</p>
+      </div>
+      <div class="card card-purple" style="text-align:center;">
+        <div style="font-size:2.5rem;margin-bottom:8px;">⚡</div>
+        <h3>交付升级</h3>
+        <p style="font-size:0.85rem;color:var(--text2);text-decoration:line-through;">多角色串行，人天堆叠</p>
+        <p style="font-size:1.1rem;font-weight:700;color:var(--accent);margin-top:4px;">Agent 驱动，单人闭环</p>
+        <p style="font-size:0.85rem;color:var(--text2);margin-top:4px;">SDD + HITL，技术收敛单一工种，人效翻倍</p>
+      </div>
+      <div class="card card-green" style="text-align:center;">
+        <div style="font-size:2.5rem;margin-bottom:8px;">🎯</div>
+        <h3>目标锚定</h3>
+        <p style="font-size:0.85rem;color:var(--text2);text-decoration:line-through;">完成了多少需求</p>
+        <p style="font-size:1.1rem;font-weight:700;color:var(--success);margin-top:4px;">B+C 级需求占比 50%+</p>
+        <p style="font-size:0.85rem;color:var(--text2);margin-top:4px;">价值中心而非成本中心，用 ROI 证明转型</p>
+      </div>
+    </div>
+
+    <div style="margin-top:2em;padding:16px 24px;background:linear-gradient(135deg,var(--primary-light),var(--accent-light),var(--success-light));border-radius:12px;display:inline-block;">
+      <p style="font-size:1.1rem;font-weight:700;color:var(--text1);">一体两翼不是分工，是协同——左翼找战场，右翼建跑道，一体打赢仗</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  let mode = 'scroll';
+  let current = 0;
+  const sections = document.querySelectorAll('.section');
+  const indicator = document.querySelector('.page-indicator');
+  const toggleBtn = document.querySelector('.mode-toggle');
+
+  function updateIndicator() {
+    indicator.textContent = `${current + 1} / ${sections.length}`;
+  }
+
+  function goTo(i) {
+    if (i < 0 || i >= sections.length) return;
+    sections[current].classList.remove('active');
+    current = i;
+    sections[current].classList.add('active');
+    updateIndicator();
+  }
+
+  function enterPresent() {
+    mode = 'present';
+    document.body.className = 'present-mode';
+    toggleBtn.textContent = '✕ 退出演示';
+
+    // find which section is most visible
+    let best = 0, bestDist = Infinity;
+    sections.forEach((s, i) => {
+      const r = s.getBoundingClientRect();
+      const dist = Math.abs(r.top);
+      if (dist < bestDist) { bestDist = dist; best = i; }
+    });
+    current = best;
+    sections.forEach(s => s.classList.remove('active'));
+    sections[current].classList.add('active');
+    updateIndicator();
+  }
+
+  function exitPresent() {
+    mode = 'scroll';
+    document.body.className = 'scroll-mode';
+    toggleBtn.textContent = '⏎ 演示模式';
+    sections.forEach(s => s.classList.remove('active'));
+    // scroll to current section
+    sections[current].scrollIntoView({ behavior: 'auto' });
+  }
+
+  function toggleMode() {
+    mode === 'scroll' ? enterPresent() : exitPresent();
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'p' || e.key === 'P') {
+      if (document.activeElement.tagName === 'INPUT') return;
+      toggleMode();
+    }
+    if (mode === 'present') {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); goTo(current + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); goTo(current - 1); }
+      if (e.key === 'Escape') exitPresent();
+    }
+  });
+</script>
+
+</body>
+</html>
