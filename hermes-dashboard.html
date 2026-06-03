@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hermes Agent · 我的 AI 助手</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;background:linear-gradient(135deg,#0f0f1a 0%,#1a1a2e 50%,#16213e 100%);color:#e0e0e0;min-height:100vh}
+.container{max-width:900px;margin:0 auto;padding:60px 24px}
+.hero{text-align:center;margin-bottom:56px}
+.hero h1{font-size:44px;font-weight:800;background:linear-gradient(135deg,#a78bfa,#60a5fa,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:12px}
+.hero .sub{color:#94a3b8;font-size:17px}
+.section{margin-bottom:44px}
+.section h2{font-size:20px;color:#a78bfa;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px;transition:all .2s}
+.card:hover{border-color:rgba(167,139,250,.3);background:rgba(255,255,255,.06)}
+.card .icon{font-size:24px;margin-bottom:8px}
+.card h3{font-size:15px;color:#e2e8f0;margin-bottom:6px}
+.card .desc{font-size:13px;color:#94a3b8;line-height:1.5}
+.card .meta{font-size:11px;color:#64748b;margin-top:8px}
+.tag{display:inline-block;padding:2px 8px;border-radius:8px;font-size:11px;margin-right:4px}
+.tag-green{background:rgba(52,211,153,.15);color:#34d399}
+.tag-blue{background:rgba(96,165,250,.15);color:#60a5fa}
+.tag-purple{background:rgba(167,139,250,.15);color:#a78bfa}
+.tag-orange{background:rgba(251,146,60,.15);color:#fb923c}
+.highlight{background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);border-radius:12px;padding:18px 22px;margin-bottom:20px}
+.highlight h3{color:#34d399;margin-bottom:8px;font-size:15px}
+ul{list-style:none;padding:0}
+ul li{font-size:13px;color:#94a3b8;padding:4px 0;padding-left:16px;position:relative}
+ul li::before{content:"·";position:absolute;left:0;color:#a78bfa;font-weight:bold}
+footer{text-align:center;margin-top:60px;color:#475569;font-size:12px}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="hero">
+<h1>Hermes Agent</h1>
+<p class="sub">7×24 AI 助手 · 全自动工作流</p>
+</div>
+
+<div class="section">
+<h2>⏰ 定时任务</h2>
+<div class="grid">
+<div class="card">
+<div class="icon">📊</div>
+<h3>A 股中午收盘汇总</h3>
+<div class="desc">获取上证/深证/创业板午间数据</div>
+<div class="meta"><span class="tag tag-blue">工作日 11:30</span></div>
+</div>
+<div class="card">
+<div class="icon">📈</div>
+<h3>A 股下午收盘汇总</h3>
+<div class="desc">三大指数收盘点位及涨跌幅</div>
+<div class="meta"><span class="tag tag-blue">工作日 15:05</span></div>
+</div>
+<div class="card">
+<div class="icon">💳</div>
+<h3>信用卡还款检查</h3>
+<div class="desc">查 Things3 待办 → 邮件查账单 → 推送汇总</div>
+<div class="meta"><span class="tag tag-purple">每天 8:30</span></div>
+</div>
+<div class="card">
+<div class="icon">🌅</div>
+<h3>早餐记录提醒</h3>
+<div class="desc">查多维表格 → 未记录则推送今日推荐</div>
+<div class="meta"><span class="tag tag-purple">每天 8:30</span></div>
+</div>
+<div class="card">
+<div class="icon">🍱</div>
+<h3>午餐记录提醒</h3>
+<div class="desc">检查饮食记录 → 推荐午餐菜品</div>
+<div class="meta"><span class="tag tag-purple">每天 11:45</span></div>
+</div>
+<div class="card">
+<div class="icon">🍲</div>
+<h3>晚餐记录提醒</h3>
+<div class="desc">判断轻断食日 → 推送晚餐推荐</div>
+<div class="meta"><span class="tag tag-purple">每天 18:30</span></div>
+</div>
+<div class="card">
+<div class="icon">📋</div>
+<h3>每周排下周菜谱</h3>
+<div class="desc">根据减脂计划 + 公司菜单排下周菜谱</div>
+<div class="meta"><span class="tag tag-purple">周日 20:00</span></div>
+</div>
+</div>
+</div>
+
+<div class="section">
+<h2>🔧 集成能力</h2>
+<div class="grid">
+<div class="card">
+<div class="icon">📡</div>
+<h3>飞书多维表格</h3>
+<div class="desc">饮食记录、减脂计划、公司菜单，全自动读写</div>
+<div class="meta"><span class="tag tag-green">lark-cli</span></div>
+</div>
+<div class="card">
+<div class="icon">📧</div>
+<h3>IMAP 邮件</h3>
+<div class="desc">自动扫描信用卡账单，提取还款信息</div>
+<div class="meta"><span class="tag tag-green">imap-smtp-email</span></div>
+</div>
+<div class="card">
+<div class="icon">📈</div>
+<h3>股票数据</h3>
+<div class="desc">yfinance 实时行情，精准推送</div>
+<div class="meta"><span class="tag tag-green">stock-explorer</span></div>
+</div>
+<div class="card">
+<div class="icon">🔍</div>
+<h3>Tavily 搜索</h3>
+<div class="desc">高质量搜索结果，信息检索</div>
+<div class="meta"><span class="tag tag-blue">web_search</span></div>
+</div>
+<div class="card">
+<div class="icon">🧬</div>
+<h3>Self Evolution</h3>
+<div class="desc">DSPy+GEPA 自动优化技能文件</div>
+<div class="meta"><span class="tag tag-orange">self-evolution</span></div>
+</div>
+<div class="card">
+<div class="icon">⚡</div>
+<h3>RTK 重写</h3>
+<div class="desc">终端命令自动精简，减少上下文消耗</div>
+<div class="meta"><span class="tag tag-orange">rtk-rewrite</span></div>
+</div>
+</div>
+</div>
+
+<div class="highlight">
+<h3>📋 减脂饮食计划</h3>
+<ul>
+<li>🔴 周一/四：轻断食日 · 800kcal</li>
+<li>🟢 周二/三/五：正常日 · 1500kcal</li>
+<li>🟢 周六：正常日 · 1600kcal（含放纵餐）</li>
+<li>🟢 周日：正常日 · 1500kcal</li>
+</ul>
+</div>
+
+<div class="highlight">
+<h3>💳 信用卡管理</h3>
+<ul>
+<li>工行(2956) · 光大 · 中信 · 招商 · 平安 · 广发 · 交行</li>
+<li>到期自动检查 → 通过飞书推送还款提醒</li>
+</ul>
+</div>
+
+<footer>Powered by Hermes Agent · 2026</footer>
+</div>
+</body>
+</html>
