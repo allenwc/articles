@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hermes 上线日志 — 2026.06.03～06.04</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f0f14; color: #e4e4e7; line-height: 1.7; }
+  .container { max-width: 720px; margin: 0 auto; padding: 60px 24px; }
+  h1 { font-size: 28px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+  .subtitle { color: #7c8db0; font-size: 15px; margin-bottom: 40px; }
+  h2 { font-size: 20px; font-weight: 600; color: #93b4f5; margin: 40px 0 16px; padding-bottom: 8px; border-bottom: 1px solid #1e1e2e; }
+  h3 { font-size: 16px; font-weight: 600; color: #c4d4f0; margin: 24px 0 8px; }
+  p { margin: 12px 0; color: #b0b8cc; }
+  .card { background: #181825; border-radius: 12px; padding: 24px; margin: 16px 0; border: 1px solid #252542; }
+  .card.green { border-left: 3px solid #6bcb77; }
+  .card.blue { border-left: 3px solid #4d94ff; }
+  .card.purple { border-left: 3px solid #b388ff; }
+  .card.orange { border-left: 3px solid #ffab40; }
+  .tag { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 10px; border-radius: 100px; margin-right: 6px; }
+  .tag.ok { background: #1b3a2a; color: #6bcb77; }
+  .tag.wip { background: #2a2a1b; color: #ffd54f; }
+  .tag.done { background: #1a2a3a; color: #4d94ff; }
+  .tag.new { background: #2a1a3a; color: #b388ff; }
+  ul { list-style: none; margin: 8px 0; }
+  ul li { padding: 4px 0; padding-left: 16px; position: relative; color: #b0b8cc; }
+  ul li::before { content: "•"; position: absolute; left: 0; color: #6bcb77; }
+  .timeline { position: relative; padding-left: 24px; margin: 20px 0; }
+  .timeline::before { content: ""; position: absolute; left: 8px; top: 4px; bottom: 4px; width: 2px; background: #252542; }
+  .tl-item { position: relative; margin: 16px 0; }
+  .tl-item::before { content: ""; position: absolute; left: -20px; top: 6px; width: 10px; height: 10px; border-radius: 50%; background: #4d94ff; }
+  .tl-time { font-size: 12px; color: #5a6a8a; }
+  .tl-text { color: #b0b8cc; }
+  .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0; }
+  .stat { background: #111122; border-radius: 10px; padding: 16px; text-align: center; }
+  .stat .num { font-size: 28px; font-weight: 700; color: #fff; }
+  .stat .label { font-size: 12px; color: #5a6a8a; margin-top: 4px; }
+  a { color: #6c9fff; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  footer { margin-top: 60px; padding-top: 20px; border-top: 1px solid #1e1e2e; color: #5a6a8a; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Hermes 上线日志</h1>
+<p class="subtitle">从 LobsterAI 迁移到 Hermes Agent 的两天全记录 · 2026年6月3日～4日</p>
+
+<div class="stat-grid">
+  <div class="stat"><div class="num">7</div><div class="label">定时任务</div></div>
+  <div class="stat"><div class="num">55+</div><div class="label">网站接入</div></div>
+  <div class="stat"><div class="num">4</div><div class="label">信息卡片</div></div>
+</div>
+
+<h2>📦 平台迁移</h2>
+
+<div class="card green">
+  <h3>LobsterAI → Hermes Agent</h3>
+  <p>完整迁移原有自动化体系：记忆系统、定时任务、饮食追踪、股票推送、信用卡检查。从零搭建到全部跑通。</p>
+</div>
+
+<div class="card blue">
+  <h3>飞书 Base 饮食管理</h3>
+  <p>接入飞书多维表格作为健康数据中心，包含饮食记录、减脂计划、公司菜单三张表。支持手动记录 + 定时提醒。</p>
+  <ul>
+    <li>饮食表：热量、蛋白质、碳水、脂肪自动计算</li>
+    <li>计划表：每天三餐推荐 + 热量目标</li>
+    <li>菜单表：公司食堂菜品的完整数据库</li>
+  </ul>
+</div>
+
+<h2>⏰ 7 个定时任务</h2>
+
+<div class="card purple">
+  <table style="width:100%; border-collapse: collapse; color: #b0b8cc; font-size: 14px;">
+    <tr style="border-bottom: 1px solid #252542;">
+      <th style="text-align:left; padding: 8px 4px; color: #7c8db0;">任务</th>
+      <th style="text-align:left; padding: 8px 4px; color: #7c8db0;">时间</th>
+      <th style="text-align:left; padding: 8px 4px; color: #7c8db0;">格式</th>
+    </tr>
+    <tr>
+      <td style="padding: 8px 4px;">📊 A股午间收盘</td>
+      <td style="padding: 8px 4px; color: #5a6a8a;">11:30 工作日</td>
+      <td style="padding: 8px 4px;"><span class="tag new">卡片</span></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px 4px;">📊 A股收盘</td>
+      <td style="padding: 8px 4px; color: #5a6a8a;">15:05 工作日</td>
+      <td style="padding: 8px 4px;"><span class="tag new">卡片+评论</span></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px 4px;">💳 信用卡检查</td>
+      <td style="padding: 8px 4px; color: #5a6a8a;">08:30 每天</td>
+      <td style="padding: 8px 4px;"><span class="tag done">卡片</span></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px 4px;">🌅 早餐提醒</td>
+      <td style="padding: 8px 4px; color: #5a6a8a;">08:30 每天</td>
+      <td style="padding: 8px 4px;"><span class="tag new">卡片</span></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px 4px;">🍱 午餐提醒</td>
+      <td style="padding: 8px 4px; color: #5a6a8a;">11:45 每天</td>
+      <td style="padding: 8px 4px;"><span class="tag new">卡片</span></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px 4px;">🍲 晚餐提醒</td>
+      <td style="padding: 8px 4px; color: #5a6a8a;">18:30 每天</td>
+      <td style="padding: 8px 4px;"><span class="tag new">卡片+断食</span></td>
+    </tr>
+    <tr>
+      <td style="padding: 8px 4px;">📅 每周菜谱</td>
+      <td style="padding: 8px 4px; color: #5a6a8a;">周日 20:00</td>
+      <td style="padding: 8px 4px;"><span class="tag done">文本</span></td>
+    </tr>
+  </table>
+</div>
+
+<h2>🎨 飞书交互卡片</h2>
+
+<div class="card orange">
+  <p>所有推送从纯文本升级为飞书交互卡片（interactive message card），统一 <code>wathet</code> 色调，字段分列排版，底部带操作链接。</p>
+  <ul>
+    <li>饮食卡片：三餐分列 + 热量汇总 + 追踪入口</li>
+    <li>股市卡片：三指数并排 + 热点板块 + AI 评论</li>
+    <li>配色定制：🔴涨 🟢跌（中国股市习惯）</li>
+    <li>轻断食日专属样式</li>
+  </ul>
+</div>
+
+<h2>📈 A股监控</h2>
+
+<div class="card blue">
+  <p>基于 yfinance 实时拉取上证、深证、创业板三大指数，午间 + 收盘两次推送。</p>
+  <ul>
+    <li>点位 & 涨跌幅实时显示</li>
+    <li>当日领涨/领跌板块自动抓取</li>
+    <li>AI 生成 1-2 句市场评论</li>
+    <li>配色遵循 A 股习惯：红涨绿跌</li>
+  </ul>
+</div>
+
+<h2>💳 信用卡智能检查</h2>
+
+<div class="card purple">
+  <p>每天 08:30 自动检查：</p>
+  <ul>
+    <li>读 Things 3 Today 待办 → 识别需关注的银行</li>
+    <li>查阿里云邮箱账单 → 提取金额和到期日</li>
+    <li>有账单 → 推送还款提醒卡片</li>
+    <li>无账单 → 自动清理过期待办</li>
+  </ul>
+  <p style="font-size:13px; color: #5a6a8a; margin-top: 8px;">覆盖：工行、交行、招行、光大、中信、平安、广发</p>
+</div>
+
+<h2>🍽️ 饮食追踪</h2>
+
+<div class="card green">
+  <p><strong>减脂计划</strong>：周一/四轻断食 800kcal · 周二/三/五正常 1500kcal · 周六 1600kcal · 周日 1500kcal</p>
+  <p style="margin-top: 8px;">记录方式：口头告诉 Hermes → 自动写入飞书 Base → 推送汇总卡片</p>
+  <p style="margin-top: 4px;">拍照识别：支持食物拍照 → qwen-vl-max 视觉识别 → 自动估算热量（开发中）</p>
+</div>
+
+<h2>🔧 工具链</h2>
+
+<div class="card blue">
+  <table style="width:100%; border-collapse: collapse; color: #b0b8cc; font-size: 14px;">
+    <tr style="border-bottom: 1px solid #252542;">
+      <th style="text-align:left; padding: 6px 4px; color: #7c8db0;">工具</th>
+      <th style="text-align:left; padding: 6px 4px; color: #7c8db0;">用途</th>
+      <th style="text-align:left; padding: 6px 4px; color: #7c8db0;">状态</th>
+    </tr>
+    <tr>
+      <td style="padding: 6px 4px;">Lark CLI</td>
+      <td style="padding: 6px 4px; color: #5a6a8a;">飞书 Base 读写 + 卡片推送</td>
+      <td style="padding: 6px 4px;"><span class="tag ok">✓</span></td>
+    </tr>
+    <tr>
+      <td style="padding: 6px 4px;">AutoCLI 0.3.8</td>
+      <td style="padding: 6px 4px; color: #5a6a8a;">55+ 网站命令行接入</td>
+      <td style="padding: 6px 4px;"><span class="tag ok">✓</span></td>
+    </tr>
+    <tr>
+      <td style="padding: 6px 4px;">stock-explorer</td>
+      <td style="padding: 6px 4px; color: #5a6a8a;">yfinance A股数据</td>
+      <td style="padding: 6px 4px;"><span class="tag ok">✓</span></td>
+    </tr>
+    <tr>
+      <td style="padding: 6px 4px;">imap-smtp-email</td>
+      <td style="padding: 6px 4px; color: #5a6a8a;">阿里云邮箱账单检查</td>
+      <td style="padding: 6px 4px;"><span class="tag ok">✓</span></td>
+    </tr>
+    <tr>
+      <td style="padding: 6px 4px;">Things 3 (sqlite)</td>
+      <td style="padding: 6px 4px; color: #5a6a8a;">待办事项读写</td>
+      <td style="padding: 6px 4px;"><span class="tag ok">✓</span></td>
+    </tr>
+    <tr>
+      <td style="padding: 6px 4px;">AIGW (gpt-image-1)</td>
+      <td style="padding: 6px 4px; color: #5a6a8a;">AI 生图</td>
+      <td style="padding: 6px 4px;"><span class="tag ok">✓</span></td>
+    </tr>
+    <tr>
+      <td style="padding: 6px 4px;">qwen-vl-max</td>
+      <td style="padding: 6px 4px; color: #5a6a8a;">食物视觉识别</td>
+      <td style="padding: 6px 4px;"><span class="tag ok">✓</span></td>
+    </tr>
+    <tr>
+      <td style="padding: 6px 4px;">POPO CLI</td>
+      <td style="padding: 6px 4px; color: #5a6a8a;">会议室预订</td>
+      <td style="padding: 6px 4px;"><span class="tag ok">✓</span></td>
+    </tr>
+    <tr>
+      <td style="padding: 6px 4px;">HealthKit / Shortcuts</td>
+      <td style="padding: 6px 4px; color: #5a6a8a;">健康数据读取</td>
+      <td style="padding: 6px 4px;"><span class="tag wip">受限</span></td>
+    </tr>
+  </table>
+</div>
+
+<h2>🐛 踩坑 & 修复</h2>
+
+<div class="timeline">
+  <div class="tl-item">
+    <div class="tl-time">6/4 08:30</div>
+    <div class="tl-text">信用卡 & 早餐 cron 触发但跑不完成 → 发现 Things 3 数据库路径不对 + lark-cli <code>--filter</code> 参数已废弃</div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-time">6/4 09:30</div>
+    <div class="tl-text">修复：Things DB 路径更正为 <code>ThingsData-6DYGT/…/main.sqlite</code>，lark-cli 改用 <code>--filter-json</code></div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-time">6/4 11:30+</div>
+    <div class="tl-text">A股卡片配色修正：🔴 涨 🟢 跌（原反了）</div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-time">6/4 12:00+</div>
+    <div class="tl-text">午餐提醒 cron 正常触发 & 静默（已有记录），验证修复生效</div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-time">6/4 12:30</div>
+    <div class="tl-text">全磁盘访问权限开通 → iCloud Shortcuts 目录可读，但 HealthKit 在 Mac 上不可用</div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-time">6/4 13:40</div>
+    <div class="tl-text">AutoCLI 安装完成，55+ 网站一键接入</div>
+  </div>
+  <div class="tl-item">
+    <div class="tl-time">6/4 15:05</div>
+    <div class="tl-text">A股收盘 cron 以新卡片格式（含板块+评论）正常推送</div>
+  </div>
+</div>
+
+<h2>📋 待继续</h2>
+
+<div class="card orange">
+  <ul>
+    <li>健康数据：需从 iPhone 端导出到 iCloud，Mac 端读取</li>
+    <li>照片识别饮食：视觉识别已接好，待集成到飞书记录流程</li>
+    <li>仪表盘：<a href="https://articles.luran.wang/hermes-dashboard.html">articles.luran.wang/hermes-dashboard.html</a> 可迭代更新</li>
+    <li>下周菜谱 cron：周日 20:00 首次运行</li>
+  </ul>
+</div>
+
+<footer>
+  Hermes Agent · 绫波丽 persona · 2026.06.04<br>
+  发布: <a href="https://articles.luran.wang/hermes-onboarding.html">articles.luran.wang/hermes-onboarding.html</a>
+</footer>
+
+</div>
+</body>
+</html>
